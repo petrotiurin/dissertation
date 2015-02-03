@@ -1,0 +1,68 @@
+Cover Page.
+
+Declaration.
+
+	This dissertation is submitted to the University of Bristol in accordance with the requirements of the degree of MEng in the Faculty of Engineering. It has not been submitted for any other degree or diploma of any examining body. Except where specifically acknowledged, it is all the work of the Author.
+
+Contents.
+
+List of figures/tables/algorithms.
+
+Executive summary (1 page).
+
+	This section should precis the project context, aims and objectives, and main contributions and achieve- ments; the same section may be called an abstract elsewhere. The goal is to ensure the reader is clear about what the topic is, what you have done within this topic, and what your view of the outcome is.
+	The former aspects should be guided by your specification: essentially this section is a (very) short version of what is typically the first chapter. The latter aspects should be presented as a concise, factual bullet point list. 
+
+Supporting technologies (1 page).
+
+	This section should present a detailed summary, in bullet point form, of any third-party resources (e.g., hardware and software components) used during the project. Use of such resources is always perfectly acceptable: the goal of this section is simply to be clear about how and where they are used, so that a clear assessment of your work can result.
+
+Notation and acronyms (optional, 1-2 pages).
+
+Acknowledgements (1 page).
+
+	Advisor, supervisor, mum, dad, etc.
+
+Contextual Background (10 pages).
+
+	This chapter should describe the project context, and motivate each of the proposed aims and objectives. Ideally, it is written at a fairly high-level, and easily understood by a reader who is technically competent but not an expert in the topic itself.
+	In short, the goal is to answer three questions for the reader. First, what is the project topic, or problem being investigated? Second, why is the topic important, or rather why should the reader care about it? For example, why there is a need for this project (e.g., lack of similar software or deficiency in existing software), who will benefit from the project and in what way (e.g., end-users, or software developers) what work does the project build on and why is the selected approach either important and/or interesting (e.g., fills a gap in literature, applies results from another field to a new problem). Finally, what are the central challenges involved and why are they significant?
+	The chapter should conclude with a concise bullet point list that summarises the aims and objectives.
+
+Technical Background (10 to 20 pages).
+	
+	This chapter is intended to describe the technical basis on which execution of the project depends. The goal is to provide a detailed explanation of the specific problem at hand, and existing work that is relevant (e.g., an existing algorithm that you use, alternative solutions proposed, supporting technologies).
+	Per the same advice in the handbook, note there is a subtly difference from this and a full-blown literature review (or survey). The latter might try to capture and organise (e.g., categorise somehow) all related work, potentially offering meta-analysis, whereas here the goal is simple to ensure the dissertation is self-contained. Put another way, after reading this chapter a non-expert reader should have obtained enough background to understand what you have done, and then accurately assess your work. You might view an additional goal as giving the reader confidence that you are able to absorb, understand and clearly communicate highly technical material.
+
+Project Execution (20 pages).
+
+	This chapter is intended to describe what you did: the goal is to explain the main activity or activities, of any type, which constituted your work during the project. The content is highly topic-specific, but for many projects it will make sense to split the chapter into two sections: one will discuss the design of something (e.g., some hardware or software, or an algorithm, or experiment), including any rationale or decisions made, and the other will discuss how this design was realised via some form of implementation.
+	This is, of course, far from ideal for many project topics. Some situations which clearly require a different approach include:
+	• In a project where asymptotic analysis of some algorithm is the goal, there is no real “design and implementation” in a traditional sense even though the activity of analysis is clearly within the remit of this chapter.
+	• In a project where analysis of some results is as major, or a more major goal than the implementation that produced them, it might be sensible to merge this chapter with the next one: the main activity is such that discussion of the results cannot be viewed separately.
+	Note that it is common to include evidence of “best practice” project management (e.g., use of version control, choice of programming language and so on). Rather than simply a rote list, make sure any such content is useful and/or informative in some way: for example, if there was a decision to be made then explain the trade-offs and implications involved.
+
+Critical Evaluation (10 pages).
+
+	This chapter is intended to evaluate what you did. The content is highly topic-specific, but for many projects will have flavours of the following:
+	1. functional testing, including analysis and explanation of failure cases,
+	2. behavioural testing, often including analysis of any results that draw some form of conclusion wrt. the aims and objectives, and
+	3. evaluation of options and decisions within the project, and/or a comparison with alternatives.
+	This chapter often acts to differentiate project quality: even if the work completed is of a high technical quality, critical yet objective evaluation and comparison of the outcomes is crucial. In essence, the reader wants to learn something, so the worst examples amount to simple statements of fact (e.g., “graph X shows the result is Y”); the best examples are analytical and exploratory (e.g., “graph X shows the result is Y, which means Z; this contradicts [1], which may be because I use a different assumption”). As such, both positive and negative outcomes are valid if presented in a suitable manner.
+
+Conclusion (2 pages).
+	
+	The concluding chapter of a dissertation is often underutilised because it is too often left too close to the deadline: it is important to allocation enough attention. Ideally, the chapter will consist of three parts:
+	1. (Re)summarise the main contributions and achievements, in essence summing up the content.
+	2. Clearly state the current project status (e.g., “X is working, Y is not”) and evaluate what has been achieved with respect to the initial aims and objectives (e.g., “I completed aim X outlined previously, the evidence for this is within Chapter Y”). There is no problem including aims which were not completed, but it is important to evaluate and/or justify why this is the case.
+	3. Outline any open problems or future plans. Rather than treat this only as an exercise in what you could have done given more time, try to focus on any unexplored options or interesting outcomes (e.g., “my experiment for X gave counter-intuitive results, this could be because Y and would form an interesting area for further study” or “users found feature Z of my software difficult to use, which is obvious in hindsight but not during at design stage; to resolve this, I could clearly apply the technique of Smith [7]”).
+
+Bibliography.
+
+Appendices.
+
+	Content which is not central to, but may enhance the dissertation can be included in one or more appendices; examples include, but are not limited to
+	• lengthy mathematical proofs, numerical or graphical results which are summarised in the main body,
+	• sample or example calculations, and
+	• results of user studies or questionnaires.
+	Note that in line with most research conferences, the marking panel is not obliged to read such appendices.
