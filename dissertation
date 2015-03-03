@@ -13,6 +13,24 @@ Executive summary (1 page).
 	This section should precis the project context, aims and objectives, and main contributions and achieve- ments; the same section may be called an abstract elsewhere. The goal is to ensure the reader is clear about what the topic is, what you have done within this topic, and what your view of the outcome is.
 	The former aspects should be guided by your specification: essentially this section is a (very) short version of what is typically the first chapter. The latter aspects should be presented as a concise, factual bullet point list. 
 
+
+	This thesis investigates the solutions for efficient file transfer between a client and a server during an unstable network connection. In particular, CouchDB is used, as it makes use of client-server communication but lacks robustness in the file transfer implementation.
+
+	Currently, CouchDB and most of the other open-source databases can receive and store files as well as structured data. However, the protocols governing the transfer of these files are quite simplistic. Nowadays, the use of mobile devices is prevailing and their storage space is rapidly growing. Big files, like high-definition videos, are being transferred from and to them. However, the network connection they use is not always perfect. A need arises of a new protocol that would minimise the time and traffic used and ensure the successful delivery of large files over the changing or unstable network conditions.
+
+	This project focuses on developing an algorithm that would be able to transfer files of various sizes to and from a CouchDB instance while allowing to pause and resume the transfer, and recover from packet loss during the transfer without the need to restart the transmission from the beginning.
+
+	The main contributions are:
+
+	* An algorithm specification that resolves the said problem and allows resumable file transfer.
+
+	* A Java client and proxy server implementation, which implement the abovementioned algorithm and can be modified to the need of any database implementation.
+
+	* TBD.
+
+	* TBD.
+
+
 Supporting technologies (1 page).
 
 	This section should present a detailed summary, in bullet point form, of any third-party resources (e.g., hardware and software components) used during the project. Use of such resources is always perfectly acceptable: the goal of this section is simply to be clear about how and where they are used, so that a clear assessment of your work can result.
@@ -28,6 +46,8 @@ Contextual Background (10 pages).
 	This chapter should describe the project context, and motivate each of the proposed aims and objectives. Ideally, it is written at a fairly high-level, and easily understood by a reader who is technically competent but not an expert in the topic itself.
 	In short, the goal is to answer three questions for the reader. First, what is the project topic, or problem being investigated? Second, why is the topic important, or rather why should the reader care about it? For example, why there is a need for this project (e.g., lack of similar software or deficiency in existing software), who will benefit from the project and in what way (e.g., end-users, or software developers) what work does the project build on and why is the selected approach either important and/or interesting (e.g., fills a gap in literature, applies results from another field to a new problem). Finally, what are the central challenges involved and why are they significant?
 	The chapter should conclude with a concise bullet point list that summarises the aims and objectives.
+
+
 
 Technical Background (10 to 20 pages).
 	
