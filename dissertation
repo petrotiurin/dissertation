@@ -6,6 +6,10 @@ Declaration.
 
 Contents.
 
+-Context
+-Technical Background
+
+
 List of figures/tables/algorithms.
 
 Executive summary (1 page).
@@ -26,14 +30,17 @@ Executive summary (1 page).
 
 	* A Java client and proxy server implementation, which implement the abovementioned algorithm and can be modified to the need of any database implementation.
 
-	* TBD.
+	* A native CouchDB applicatio of the algorithm.
 
-	* TBD.
+	* Benchmark on both proxy server and native implementations and comparison between them.
 
 
 Supporting technologies (1 page).
 
 	This section should present a detailed summary, in bullet point form, of any third-party resources (e.g., hardware and software components) used during the project. Use of such resources is always perfectly acceptable: the goal of this section is simply to be clear about how and where they are used, so that a clear assessment of your work can result.
+
+	* Apache Tomcat server was used in order to test the Java proxy server developed.
+	* Apache CouchDB was used as an example database which used the native implementation of the algorithm.
 
 Notation and acronyms (optional, 1-2 pages).
 
@@ -48,11 +55,34 @@ Contextual Background (10 pages).
 	The chapter should conclude with a concise bullet point list that summarises the aims and objectives.
 
 
+	Database technology, as a means of storing organized data, is at the core of many systems and services employed in the industry nowadays. Databases are used in conjunction with Database Management Systems (DBMS), which are designed to allow creation, querying, deletion and administration of them. In 1970 Edgar Codd outlined an approach to database construction that was based on relational model. In his paper he suggested a model where a database would consist of interlinked tables of fixed-length records of data, each table used for different type of entity. In this model some bit of information would be used as a “key” to uniquely identify a particular record in different tables. Optional elements would be moved out of the main table where it could then be found by searching with this key.
+
+	Relational model has been the main approach to the database design and implementation until late 2000’s. Up to that point this model was enough to satisfy the industry needs. However, with the increased availability of the internet-connected devices the new industry-wide needs arose. The main trends became: supporting the large number of concurrent users, ability to incorporate semi-structured and unstructured data (e.g. log files, tweets, audio and video), and scaling capabilities. The latter became especially relevant with the rise of cloud computing, where the ability to scale-out with the periodic or spiked loads is crucial. Because of the centralized, share-everything technology of the relational model it scales up (requires a better server, with more CPUs, memory, etc.), rather then out (more servers of the same configuration) and therefore it becomes problematic to use with the applications that demand easy and dynamic scalability.  In order to retrieve data from a relational database the desired information has to be collected from many tables (in case of modern enterprise applications) and combined together before it could be accessed by the application. This became a problem for modern big data applications.
+
+	In 2009 a new approach to database design was introduced. The NoSQL idea was introduced, which referred to a movement in database design, which doesn’t use the conventional relational model. Instead, depending on the implementation, the data is stored in key-value pairs, documents or graphs. For example, a document-oriented NoSQL database takes the data to store and aggregates it into a document using a specified format (e.g. JSON in case of CouchDB). A single document might contain combined data that would span over 20 tables in a relational database. This might lead to duplication, however the storage cost tends to get cheaper and often gets outweighed by the performance advantages. Also, NoSQL databases are designed to be schemaless, which means new types of data can easily be added to documents without application disruption.
+
+	Another prominent industry trend is the rise of the mobile devices connected to the internet. Mobile phones, tablets and laptops are widely used nowadays and recent trends show that it even overtakes the desktop computer usage. However, the mobile network is usually less reliable, especially in less populated areas. 
+
+	Mobile market is pressuring the developers for more efficient transfer protocols, as mobile data can be expensive. Most noSQL databases allow users to upload external files as attachments to the database entry. In terms of mobile devices these can be videos or pictures. These files can be up to hundreds of megabytes. Therefore, there are two main concerns with regards to the transmission of these: if a packet loss in a network causes the transmission of a file to stop, or when a slow network makes the transmission really long. In the former case, the user doesn’t want to restart the transmission over again as it might incur additional expenses and inconvenience. In the latter case the user might want to pause the transmission if it takes a long time in order to let some other application use the full speed of the network available.
+
+	Out of the most popular noSQL database implementations only MongoDB has a specification for storing and retrieving large files from the database called GridFS. However, it is more of a convention of how to store large files, rather than a native implementation. In order to upload a file GridFS splits it into chunks of a user-set size, then uploads and stores each individual file chunk in a separate database document. Another document is created to hold the information of the chunks stored (e.g. size, number of chunks, etc.) Due to this the original file can only be accessed using the GridFS algorithm. 
+
+	The purpose of this dissertation is to investigate the possible adaptation of a similar file-transfer algorithm to a wider variety of database implementations. 
+
+	TODO: Divide into sub-sections:
+		-Introduction and choice of topic (noSQL popularity and mobile networks)
+		-The problem of file transfer
+		-Objectives?
 
 Technical Background (10 to 20 pages).
 	
 	This chapter is intended to describe the technical basis on which execution of the project depends. The goal is to provide a detailed explanation of the specific problem at hand, and existing work that is relevant (e.g., an existing algorithm that you use, alternative solutions proposed, supporting technologies).
 	Per the same advice in the handbook, note there is a subtly difference from this and a full-blown literature review (or survey). The latter might try to capture and organise (e.g., categorise somehow) all related work, potentially offering meta-analysis, whereas here the goal is simple to ensure the dissertation is self-contained. Put another way, after reading this chapter a non-expert reader should have obtained enough background to understand what you have done, and then accurately assess your work. You might view an additional goal as giving the reader confidence that you are able to absorb, understand and clearly communicate highly technical material.
+
+	*previous and related work*
+	*NoSQL, CouchDB, JSON.
+	*Networking, HTTP requests.
+	*GridFS.
 
 Project Execution (20 pages).
 
@@ -62,6 +92,12 @@ Project Execution (20 pages).
 	• In a project where analysis of some results is as major, or a more major goal than the implementation that produced them, it might be sensible to merge this chapter with the next one: the main activity is such that discussion of the results cannot be viewed separately.
 	Note that it is common to include evidence of “best practice” project management (e.g., use of version control, choice of programming language and so on). Rather than simply a rote list, make sure any such content is useful and/or informative in some way: for example, if there was a decision to be made then explain the trade-offs and implications involved.
 
+	1. Algorithm design
+	2. Implementation
+	2.1 Proxy server
+	2.2 Native implementation
+	2.3 Benchmark
+
 Critical Evaluation (10 pages).
 
 	This chapter is intended to evaluate what you did. The content is highly topic-specific, but for many projects will have flavours of the following:
@@ -70,12 +106,18 @@ Critical Evaluation (10 pages).
 	3. evaluation of options and decisions within the project, and/or a comparison with alternatives.
 	This chapter often acts to differentiate project quality: even if the work completed is of a high technical quality, critical yet objective evaluation and comparison of the outcomes is crucial. In essence, the reader wants to learn something, so the worst examples amount to simple statements of fact (e.g., “graph X shows the result is Y”); the best examples are analytical and exploratory (e.g., “graph X shows the result is Y, which means Z; this contradicts [1], which may be because I use a different assumption”). As such, both positive and negative outcomes are valid if presented in a suitable manner.
 
+	*Benchmark?
+	*GridFS vs my algorithm
+
 Conclusion (2 pages).
 	
 	The concluding chapter of a dissertation is often underutilised because it is too often left too close to the deadline: it is important to allocation enough attention. Ideally, the chapter will consist of three parts:
 	1. (Re)summarise the main contributions and achievements, in essence summing up the content.
 	2. Clearly state the current project status (e.g., “X is working, Y is not”) and evaluate what has been achieved with respect to the initial aims and objectives (e.g., “I completed aim X outlined previously, the evidence for this is within Chapter Y”). There is no problem including aims which were not completed, but it is important to evaluate and/or justify why this is the case.
 	3. Outline any open problems or future plans. Rather than treat this only as an exercise in what you could have done given more time, try to focus on any unexplored options or interesting outcomes (e.g., “my experiment for X gave counter-intuitive results, this could be because Y and would form an interesting area for further study” or “users found feature Z of my software difficult to use, which is obvious in hindsight but not during at design stage; to resolve this, I could clearly apply the technique of Smith [7]”).
+
+	1. Main achievements
+	2. Further study.
 
 Bibliography.
 
