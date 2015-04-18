@@ -53,7 +53,7 @@ Contextual Background (10 pages).
 	This chapter should describe the project context, and motivate each of the proposed aims and objectives. Ideally, it is written at a fairly high-level, and easily understood by a reader who is technically competent but not an expert in the topic itself.
 	In short, the goal is to answer three questions for the reader. First, what is the project topic, or problem being investigated? Second, why is the topic important, or rather why should the reader care about it? For example, why there is a need for this project (e.g., lack of similar software or deficiency in existing software), who will benefit from the project and in what way (e.g., end-users, or software developers) what work does the project build on and why is the selected approach either important and/or interesting (e.g., fills a gap in literature, applies results from another field to a new problem). Finally, what are the central challenges involved and why are they significant?
 	The chapter should conclude with a concise bullet point list that summarises the aims and objectives.
-
+	
 
 	Database technology, as a means of storing organized data, is at the core of many systems and services employed in the industry nowadays. Databases are used in conjunction with Database Management Systems (DBMS), which are designed to allow creation, querying, deletion and administration of them. In 1970 Edgar Codd outlined an approach to database construction that was based on relational model. In his paper he suggested a model where a database would consist of interlinked tables of fixed-length records of data, each table used for different type of entity. In this model some bit of information would be used as a “key” to uniquely identify a particular record in different tables. Optional elements would be moved out of the main table where it could then be found by searching with this key.
 
@@ -79,10 +79,47 @@ Technical Background (10 to 20 pages).
 	This chapter is intended to describe the technical basis on which execution of the project depends. The goal is to provide a detailed explanation of the specific problem at hand, and existing work that is relevant (e.g., an existing algorithm that you use, alternative solutions proposed, supporting technologies).
 	Per the same advice in the handbook, note there is a subtly difference from this and a full-blown literature review (or survey). The latter might try to capture and organise (e.g., categorise somehow) all related work, potentially offering meta-analysis, whereas here the goal is simple to ensure the dissertation is self-contained. Put another way, after reading this chapter a non-expert reader should have obtained enough background to understand what you have done, and then accurately assess your work. You might view an additional goal as giving the reader confidence that you are able to absorb, understand and clearly communicate highly technical material.
 
-	*previous and related work*
-	*NoSQL, CouchDB, JSON.
-	*Networking, HTTP requests.
-	*GridFS.
+	1. NoSQL?
+
+	2. CouchDB
+
+	CouchDB is a NoSQL database that has no schema or pre-defined data-structures such as tables. Data in the database is stored in JSON document(s) and therefore the structure of the data (or document) can change depending on the needs.
+
+	2.1 JSON
+
+	JSON is a format that uses human-readable text to transmit data as attribute-value pairs. It is primarily used to transmit data between a server and a web-application. JSON is a language-independent format and many languages have built-in tools to generate and parse such data. 
+
+	JSON accepts various common data types such as Number, String, etc. It also has more complex data types such as Object, which stores an unordered collection of key/value pairs, Array, which stores a list of any other values, and null, which is an empty value.
+
+	2.2 Views
+
+	CouchDB has a special tool designed to query this semi-structured data called view. Views are specified in JavaScript and are the method of aggregating and reporting on the documents in a database. They are built on-demand to aggregate, join and report on database documents. Views are built dynamically and don’t affect the underlying document and there can be many different view representations of the same data.
+
+	2.3 Replication
+
+	CouchDB is a distributed database system. Any number of CouchDB hosts (servers and offline-clients) can have independent “replica copies” of the same database, where applications have the full set of database-interaction features (query, add, edit, delete). When back online or on a schedule, database changes can be replicated bi-directionally. Replication provides redundancy and increases data availability. With multiple copies of the database on separate servers, replication protects a database from the loss of a single server. 
+
+	There are two main replication methods: master to slave and master to master. In the first case there is an original (master) database and its copies (slaves). The changes are submitted to the original and are propagated to its copies. In the second case the updates can be submitted to any database node and will be propagated to all the other nodes. This case is usually more desirable, but it introduces some challenges, like conflicts.
+
+	CouchDB supports master to master replication and therefore sometimes, when database is replicated, a conflict can arise if the same document was changed in both source and destination. CouchDB provides conflict-detection functionality as well as incremental replication, which copies only the documents that were changed since previous replication. 
+
+	3. Related work
+
+	3.1 GridFS for MongoDB
+
+	Similarly to CouchDB, MongoDB is a document-oriented NoSQL database. It uses BSON format of storing data, which is similar to JSON, but is encoded in binary and therefore is not human-readable on its own. Unlike CouchDB, it uses master to slave replication method.
+
+	MongoDB supports binary files as attachments to documents, but limits their size to 16MB. In order to add files larger than 16MB GridFS specification was developed. Instead of storing file in a single document it divides a file into chunks and stores them as a separate document. Another document holds file metadata such as number of chunks, their length, etc. Such file can then be queried using GridFS to retrieve it all or parts of it, by performing range queries.
+
+	3.2 How is this project different?
+
+	While this project is using a similar algorithm to GridFS, it expands on several of its features. The main aim of this project is to create a reliable transfer protocol that can be used to efficiently transfer large file by mobile devices, therefore the differences are:
+
+	•	Project’s proposed algorithm and it’s implementation are designed to tackle the problem of reliable transfer of data and resume the transmission from the point of failure without the need to restart the whole transfer from the beginning. GridFS has no special functionality to be able to cope with network failures.
+	•	The implementation is packet and data loss resistant, as it makes sure that each file chunk is received by the server and is intact. The algorithm retries to send the chunk until the acknowledgment from the server arrives. The server does not acknowledge the transfer until the checksum of the data chunk matches the supplied checksum sent by a client.
+	•	The transfer can be paused and resumed at any time. This is especially relevant for mobile users, who can use this feature in order to temporarily decrease the network load to use other bandwidth-dependent applications.
+	•	A separate implementation of the proposed algorithm in form of a proxy serve is developed in order to be used with any of the similar NoSQL database implementations with minor changes needed to the original implementation. It also can be used with older CouchDB versions that don’t have the proposed chunked transfer functionality. 
+
 
 Project Execution (20 pages).
 
