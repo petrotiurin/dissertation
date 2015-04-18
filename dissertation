@@ -129,11 +129,52 @@ Project Execution (20 pages).
 	• In a project where analysis of some results is as major, or a more major goal than the implementation that produced them, it might be sensible to merge this chapter with the next one: the main activity is such that discussion of the results cannot be viewed separately.
 	Note that it is common to include evidence of “best practice” project management (e.g., use of version control, choice of programming language and so on). Rather than simply a rote list, make sure any such content is useful and/or informative in some way: for example, if there was a decision to be made then explain the trade-offs and implications involved.
 
-	1. Algorithm design
+	1.	Algorithm design
+	1.1	Client algorithm
+		*Subject to minor changes*
+		The abstract algorithm goes as follows:
+		1.	Send a request to the server to start the transfer, containing the document ID of a destination document.
+		2.	Wait for server acknowledgment. If an error received or timed out go to 1.
+		3.	Construct a stack with chunk numbers for current file.
+		4.	For MaxN iterations:
+			4.1.	Pop a number N from the stack.
+			4.2.	Construct an asynchronous task that would send data from position N*ChunkLength to (N+1)*ChunkLength in the file.
+			4.3.	Commence execution of the task.
+		5.	While stack is not empty:
+			5.1.	If one of the tasks was finished:
+				5.1.1.	If the task succeeded:
+					5.1.1.1.	Pop a number N from the stack.
+					5.1.1.2.	Construct an asynchronous task that would send data from position N*ChunkLength to (N+1)*ChunkLength in the file.
+					5.1.1.3.	Commence execution of the task.
+				5.1.2.	If the task failed:
+					5.1.2.1.	Restart the execution of this task.
+			5.2.	If pause signal received:
+				5.2.1.	Abort all the tasks.
+				5.2.2.	Wait for resume signal.
+		6.	Wait for all tasks to finish. If any fail – restart them. 
+		7.	Send the final request to indicate that the transfer is finished.
+		8.	Wait for server acknowledgment. If an error received or timed out go to 6.
+
+		Explanation:
+		In the beginning the algorithm makes sure the server is ready to accept the file chunks. The algorithm then constructs a stack, which will hold the chunk numbers of chunks that haven’t been sent. 
+		For the data transfer the algorithm uses asynchronous tasks that are managed by the system. These tasks read a specified part of the file in the memory, construct an HTTP request, send it and wait for the server response. The task fails if the server returned failure or if the timeout is reached. It succeeds in an acknowledgement received. 
+		A set number of tasks is initiated in the beginning by popping chunk numbers from the stack and passing the appropriate byte ranges to be read from the file to each task.  Then, while the stack is not empty, the algorithm replaces any finished tasks with new. If the finished task succeeded a new chunk number is popped from the stack and a task instantiated. If the finished task resulted in a failure it’s restarted.
+		When the stack is emptied the algorithm waits for all tasks to finish and restart them if necessary. The final request is sent in the end in order to complete the transfer and add the resulting file to a document.
+	
+	1.2	Chunk format
+		Each chunk has a payload and several headers:
+			•	“Chunked-Transfer” – can be set to “true” to specify that current request is a part of series and should not be treated on its own, or “final” to end the upload and attach the file to a specified document.
+			•	“Start” – the start position of a chunk in the file. Value in bytes.
+			•	“MD5” – md5 checksum of the chunk, calculated by the client.
+			•	“DocID”. Proxy server only. An ID of a destination document for the file. Since document ID in CouchDB is specified in the URL this header is omitted in native implementation. 
+
+	1.3	
+
 	2. Implementation
 	2.1 Proxy server
 	2.2 Native implementation
 	2.3 Benchmark
+
 
 Critical Evaluation (10 pages).
 
