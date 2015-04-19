@@ -170,10 +170,39 @@ Project Execution (20 pages).
 
 	1.3	
 
-	2. Implementation
-	2.1 Proxy server
-	2.2 Native implementation
-	2.3 Benchmark
+	
+	2.	Implementation
+
+	The proposed implementation was developed in two forms: as a proxy server that doesn’t require any changes to the underlying database and a native implementation to CouchDB, which allows the database to directly accept the chunked file transfer.
+	Each implementation consists of a client side and a server side.  
+	
+	2.1	Client
+
+	A client application is designed to be able to transmit files using the proposed algorithm. It is developed in Java, as it stays the most popular programming language in the industry and can be run on most computers and operating systems. This language is also chosen as it is used for Android application development. Android is one of the leading operating systems on the mobile market and therefore the implementation of the client in Java allows for it to be easily ported to this platform to cover a large proportion of mobile users.
+
+	2.1.1	Preparation for transmission
+
+	The implementation follows the algorithm closely, but takes into account the specifics of Java language. The execution starts at the main thread, where the program sets the number of helper threads. By default this number is set to 4, as it is the most common number of CPU cores in a modern computer and therefore it leads to better performance. The program also has the address of the receiving server. After this, the program sends an empty HTTP PUT request, with the destination document ID in the header. It waits for the server response a certain time defined by the timeout variable and repeats the request if a code different from 200 is received from the server, or the request timed out.
+
+	2.1.2	File transmission
+
+	When the initial request succeeded the client starts the file transfer. It creates a stack to hold the file chunks that weren’t transmitted yet. Initially the stack is filled with the total number of chunks that split the given file. The program pops a first few chunk numbers from the stack. The number of chunks is equal to twice the number of threads. The program then proceeds to create an asynchronous task with each chunk range and add them to the execution pool. The number of tasks allows minimizing the time when any thread is idle, as the system will assign a new task out of the task pool when the previous task is finished. It also avoids overloading the memory (which is crucial for mobile devices), as a limited number of tasks are stored at any time. 
+	
+	2.1.3	Asynchronous task
+
+	Asynchronous task is implemented as a class, which inherits from the standard Java Runnable class so it can be passed to the execution pool. This task reads the supplied byte range from the file by the means of FileChannel construct. This construct allows the parallel access to a file. However, the file will be locked to any write operations while the transfer is running. The task also constructs an HTTP PUT request to the server containing the data extracted, destination document ID and the byte range of the data in the file. If the request succeeds the task is finished - it calls the main thread to create a new task to replace it and terminates. In case the request fails, either by timeout or the server returns failure it adds its chunk number back to the stack.
+	
+	2.1.4	Ending the transmission
+
+	When the stack is empty the main thread waits for all asynchronous tasks that are still running to finish and then proceeds to send the finish request. This is an HTTP PUT request containing no payload, but a header with the destination document ID and “Chunked-Transfer” header value set to “final”. Similarly with the initial request the client repeats this request if it times out or server returned an error. There is a special case, when the server response was lost and the server received the next request when the file was already attached to the document. In this case the client verifies if the file was successfully added by querying the document in the database. When the transmission was verified the transfer program execution ends.
+	
+	2.2	Proxy server
+
+	This implementation is designed to work without any special changes to the underlying database. It is also made to be easily adaptable to other database implementations similar to CouchDB. A server is designed to accept the chunks from the client, combine them into original file and transmit it to the database, adding it as attachment to a specified document. It is advised to set up the proxy server on the same network as the underlying database, or with a reliable connection to it. This is due to the fact that the proposed algorithm is used to transfer the file to the server, but after the assembly the server transfers the file normally, as a single HTTP request.
+	
+	2.3 Native implementation
+	2.4 Benchmark
+
 
 
 Critical Evaluation (10 pages).
