@@ -214,8 +214,26 @@ Project Execution (20 pages).
 
 		The implementation was tested on a personal laptop running MacOS 10.9.5. All the components were run locally. An instance of CoudhDB was set up and a test database created. A test client was written that would use the algorithm implementation in order to transmit the specified file. During the testing of the proxy server it also had the code for receiving files. “Slowy” software was used in order to simulate the unstable network conditions. 
 	
-	2.5 Testing
+	2.5	Experiments
 
+		Efficiency of an algorithm is dictated by its usage of system resources. It can be CPU usage, memory, or time the algorithm takes to complete. In the following experiments I try to measure how well my algorithm performs given different parameters as well as network conditions.
+
+	2.5.1	CPU usage
+
+		The initial implementation of the algorithm was using standard Java ExecutorService class. New tasks were assigned by the main thread on completion of any of the running tasks. In order to check if a task has finished its job the main thread had to continuously call each tasks isDone() method. This would load the CPU regardless of the processing done by the tasks.
+		The new implementation uses listeners to create new tasks on completion of old ones. This leads to the main thread being idle while the threaded tasks do the same amount of work. This improvement not only decreased the overall execution time of the algorithm, but also allowed lower CPU usage in certain cases.
+		During the perfect network conditions, despite the reduction in execution time, the CPU load remains high even with the new code in place. This is due to the fact that the transfer of a single chunk through such network is nearly instantaneous and therefore the tasks are created at a rate dictated by the CPU speed.
+		When the faulty network conditions are introduced the CPU load decreases accordingly. The tasks would need to wait for the request to be completed (or rejected by timeout) before proceeding with creating a new task. During this wait time the thread is idle and therefore it leads to a decrease of average CPU usage. 
+
+	2.5.2	Chunk size
+
+		I believe the size of the chunks a file is split into is the main deciding factor that affects the efficiency of this algorithm. Bigger chunks lead to more data being transferred in a single request therefore making it more “pricy” if the request fails. Because chunks are re-sent after they fail, if a transfer of a larger chunk is interrupted more data has to be sent again than in case of a smaller chunk.
+		I have run some tests to verify this belief as well as test the time efficiency of the algorithm.  The client implementation was tested against a single request sent with CURL. CURL is a command line tool for transferring data using various protocols, in our case HTTP. At first, a base case was tested when there is no packet loss and the network speed is only limited by the speed of writing data to disk. Slowy software was turned off and all the components were run locally on the same machine. The series of conducted tests showed clear superiority of transferring files with CURL rather than the proposed implementation (Figure []). This is to be expected, as with the perfect network conditions the fastest way to transfer a file would be in one go. Any additional processing would only increase the time. This is also proven by chunk size test (Figure []), where the implementation was run with different chunk sizes. For both file sizes there is a clear trend of the algorithm execution time going down with the increase of the chunk size.
+
+	2.4.3	Timeout value
+
+		There are two timeout parameters set during the HTTP connection establishment phase of asynchronous tasks: connect and read timeouts. Connect timeout is the maximum time allowed to complete the initial TCP handshake. Read timeout is the time allowed to wait for the data to be received, specifically if the server fails to send a byte after the specified time the timeout occurs.
+		The timeout value has to be carefully specified in order to maximise the algorithm effectiveness. In a fast network but with a high packet loss a small timeout value would benefit the execution time, as the program would wait less for dropped connections. However, in a slow but more reliable network this might lead to the program disregarding connections that are still transferring data (or being established) and therefore decrease the performance.  
 
 
 Critical Evaluation (10 pages).
@@ -226,8 +244,6 @@ Critical Evaluation (10 pages).
 	3. evaluation of options and decisions within the project, and/or a comparison with alternatives.
 	This chapter often acts to differentiate project quality: even if the work completed is of a high technical quality, critical yet objective evaluation and comparison of the outcomes is crucial. In essence, the reader wants to learn something, so the worst examples amount to simple statements of fact (e.g., “graph X shows the result is Y”); the best examples are analytical and exploratory (e.g., “graph X shows the result is Y, which means Z; this contradicts [1], which may be because I use a different assumption”). As such, both positive and negative outcomes are valid if presented in a suitable manner.
 
-	*Benchmark?
-	*GridFS vs my algorithm
 
 Conclusion (2 pages).
 	
