@@ -252,8 +252,18 @@ Conclusion (2 pages).
 	2. Clearly state the current project status (e.g., “X is working, Y is not”) and evaluate what has been achieved with respect to the initial aims and objectives (e.g., “I completed aim X outlined previously, the evidence for this is within Chapter Y”). There is no problem including aims which were not completed, but it is important to evaluate and/or justify why this is the case.
 	3. Outline any open problems or future plans. Rather than treat this only as an exercise in what you could have done given more time, try to focus on any unexplored options or interesting outcomes (e.g., “my experiment for X gave counter-intuitive results, this could be because Y and would form an interesting area for further study” or “users found feature Z of my software difficult to use, which is obvious in hindsight but not during at design stage; to resolve this, I could clearly apply the technique of Smith [7]”).
 
-	1. Main achievements
-	2. Further study.
+	Main Contributions
+
+	Further study
+
+	According to the experiments conducted certain parameters can be adjusted if the network conditions are known. However, in real environment these conditions are rarely obvious and furthermore are not constant. A mechanism can be developed in order to determine the current state of the network and modify the execution parameters accordingly. This would lead to each transfer starting with the best parameters possible and therefore increasing its performance.
+	
+	However, mobile devices are designed to be used on the move and since the network coverage is not uniform this leads to constantly changing network conditions. Even if the parameters are fitted for the best execution of the algorithm at the beginning of a transfer, a change in network can lead to them actually slowing it down. A dynamic approach to this problem can be developed. A mechanism that would monitor the change in the network throughout the execution of the file transfer and modify the parameters on the go. For example, if it detects that the network speed decreased it would increase the timeout value to accommodate for the changes and allow the execution to proceed. 
+
+	The native CouchDB implementation can be extended to work with the replication protocol. Since one of the main advantages of CouchDB is master-to-master replication this could benefit the users who use this feature in the conjunction with mobile devices and need it to work reliably and fast. 
+
+	NoSQL databases in general and CouchDB in particular have been widely implemented and used with the cloud technology. For example, Couchbase is an open-source database solution that was built using CouchDB and Membase technologies. One of its features is being able to run on multiple nodes in a cluster. An improved algorithm can be developed in order to utilize this technology. For example, a high availability can be achieved by automatically storing an uploaded file on different nodes. Therefore in case of failure of a node the file will not be permanently lost and can still be accessed. Another possibility is to develop a way to deal with conflicts that may arise during a file upload. Since the file can take a long time to be transferred and added to a document and during the upload another client can make a change to the same document a conflict can arise. A modification to the original algorithm can be made to accommodate those changes by, for example, allowing the user to keep the uploaded file on the server and add it to the specified document after the conflict is resolved or remove it.
+
 
 Bibliography.
 
